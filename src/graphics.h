@@ -32,6 +32,7 @@ extern void draw_pixel(uint16_t x, uint16_t y, uint8_t colour);
 
 uint8_t game_tiles[GAME_TILE_WIDTH][GAME_TILE_HEIGHT];
 
+void reset_game_tiles();
 void draw_game_tiles();
 
 #endif

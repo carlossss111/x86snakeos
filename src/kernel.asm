@@ -9,6 +9,7 @@ GLOBAL graphics_mode
 GLOBAL print_colour
 GLOBAL print
 GLOBAL draw_pixel
+GLOBAL register_interrupt_handlers
 
 ; void graphics_mode
 ; Enables 320x200 VGA 256 colour mode, let's go RETRO!
@@ -46,6 +47,44 @@ draw_pixel:
     stosb                       ; Store register value AL at addr ES:DI
     ret
 
+; void register_interrupt_handlers()
+; Registers interrupts
+register_interrupt_handlers:
+	mov [0x0024], dword keyboard_callback
+	ret
+
+; INT keyboard_callback()
+; Saves wasd state
+keyboard_callback:
+	pusha	                    ; Save state
+    xor bx,bx                   ; bx = 0: signify key down event
+    inc bx
+    in al, 0x60                 ; Get input from keyboard PS/2 port
+    btr ax, 7                   ; Carry flag is set if key up event
+    jnc .keyDown
+        dec bx                  ; bx = 1: key up event
+    .keyDown:
+    cmp al,0x1e                 ; a
+    jne .check1         
+        mov byte [cs:pressA], bl
+    .check1:
+    cmp al,0x20                 ; d
+    jne .check2
+        mov byte [cs:pressD], bl
+    .check2:
+    cmp al,0x11                 ; w
+    jne .check3
+        mov byte [cs:pressW], bl
+    .check3:
+    cmp al,0x1f                 ; s
+    jne .check4
+        mov byte [cs:pressS], bl
+    .check4:
+    mov al, 0x20 
+    out 0x20, al                ; Acknowledge the intrpt
+	popa                        ; Restore state
+	iret                        ; Return from an interrupt routine
+
 ;--------------------------------------------------------------------------
 ; Global Constants
 ;--------------------------------------------------------------------------
@@ -61,8 +100,15 @@ SECTION .rodata
 ; Global Variables
 ;--------------------------------------------------------------------------
 SECTION .data
+    GLOBAL pressA
+    GLOBAL pressD
+    GLOBAL pressW
+    GLOBAL pressS
 
-    ; (global vars here)
+    pressA: db 0
+    pressD: db 0
+    pressW: db 0
+    pressS: db 0
 
 ;--------------------------------------------------------------------------
 ; Stack

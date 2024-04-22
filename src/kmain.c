@@ -1,17 +1,42 @@
 #include "kmain.h"
 
 void kmain(){
-    uint8_t col = 0x00;
-    for(int x = 0; x < GAME_TILE_WIDTH; x++){
-        for(int y = 0; y < GAME_TILE_HEIGHT; y++){
-            game_tiles[x][y] = col;
-            col++;
-        }
-    }
-    draw_game_tiles();
+    register_interrupt_handlers();
 
-    print("Hello World");
-    print_colour("\r\nHello Universe", L_CYAN);
+    int16_t x = 0;
+    int16_t y = 0;
+    for(;;){
+        reset_game_tiles();
+
+        if(pressW){
+            y--;
+        }
+        if(pressA){
+            x--;
+        }
+        if(pressS){
+            y++;
+        }
+        if(pressD){
+            x++;
+        }
+        
+        if(x > GAME_TILE_WIDTH){
+            x = GAME_TILE_WIDTH-1;
+        }
+        if(y > GAME_TILE_HEIGHT){
+            y = GAME_TILE_HEIGHT-1;
+        }
+        if(x < 0){
+            x = 0;
+        }
+        if(y < 0){
+            y = 0;
+        }
+        game_tiles[x][y] = L_CYAN;
+
+        draw_game_tiles();
+    }
 
     for(;;);
 }

@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "graphics.h"
+#include "interrupts.h"
 
 extern void graphics_mode();
 extern void print_colour(char* str, uint8_t colour);

@@ -8,7 +8,15 @@ void draw_rect(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_
     }
 }
 
-void draw_game_tiles(){
+void reset_game_tiles(){
+    for(int i = 0; i < GAME_TILE_WIDTH; i++){
+        for(int j = 0; j < GAME_TILE_HEIGHT; j++){
+            game_tiles[i][j] = BLACK;
+        }
+    }
+}
+
+void draw_game_tiles(){ //TODO: Fix overwriting text
     uint16_t px_in_tile = PIXEL_WIDTH / GAME_TILE_WIDTH;
 
     for(int i = 0; i < GAME_TILE_WIDTH; i++){
