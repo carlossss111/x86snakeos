@@ -11,6 +11,7 @@ GLOBAL print
 GLOBAL draw_pixel
 GLOBAL register_interrupt_handlers
 GLOBAL waitms
+GLOBAL rand
 
 ; void graphics_mode
 ; Enables 320x200 VGA 256 colour mode, let's go RETRO!
@@ -96,6 +97,12 @@ waitms:
     mov ah, 0x86
     int 0x15                    ; cx:dx sleep time in mc
 	ret
+
+; uint16_t rand()
+; Read a random number
+rand:
+    rdrand ax
+    ret
 
 ;--------------------------------------------------------------------------
 ; Global Constants

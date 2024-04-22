@@ -6,8 +6,8 @@ snake init_snake(){
     snake sn;
     for(int i = 0; i < MAX_SNAKE_LENGTH; i++){
         sn.cells[i].is_active = 0;
-        sn.cells[i].x = 0;
-        sn.cells[i].y = 0;
+        sn.cells[i].x = -1;
+        sn.cells[i].y = -1;
     }
     int8_t start_x = GAME_TILE_WIDTH/2;
     int8_t start_y = GAME_TILE_HEIGHT/2;
@@ -23,12 +23,13 @@ snake init_snake(){
     return sn;
 }
 
-void fill_snake_tiles(snake* sn){
+void fill_tiles(snake* sn, apple* ap){
     for(int i = 0; i < MAX_SNAKE_LENGTH; i++){
         if(sn->cells[i].is_active){
             game_tiles[sn->cells[i].x][sn->cells[i].y] = SNAKE_COLOUR;
         }
     }
+    game_tiles[ap->x][ap->y] = APPLE_COLOUR;
 }
 
 void move(snake* sn, char_t direction){
@@ -89,4 +90,32 @@ void move(snake* sn, char_t direction){
         i++;
     }
 
+}
+
+void move_apple(apple* ap){
+    ap->x = rand() % (GAME_TILE_WIDTH-1);
+    ap->y = rand() % (GAME_TILE_HEIGHT-1);
+    //TODO: prevent apple from spawning on snake
+}
+
+apple init_apple(){
+    apple ap;
+    move_apple(&ap);
+    return ap;
+}
+
+int8_t has_hit_apple(snake* sn, apple* ap){
+    if(sn->cells[0].x == ap->x && sn->cells[0].y == ap->y){
+        return 1;
+    }
+    return 0;
+}
+
+void grow_snake(snake* sn){
+    for(int i = 0; i < MAX_SNAKE_LENGTH; i++){
+        if(!sn->cells[i].is_active){
+            sn->cells[i].is_active = 1;
+            return;
+        }
+    }
 }
