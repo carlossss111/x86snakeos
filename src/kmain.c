@@ -7,16 +7,16 @@ void kmain(){
     int16_t y = 0;
     for(;;){
         // Movement
-        if(pressW){
+        if(last_pressed == 'w'){
             y--;
         }
-        if(pressA){
+        if(last_pressed == 'a'){
             x--;
         }
-        if(pressS){
+        if(last_pressed == 's'){
             y++;
         }
-        if(pressD){
+        if(last_pressed == 'd'){
             x++;
         }
         

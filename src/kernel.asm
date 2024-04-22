@@ -65,22 +65,22 @@ keyboard_callback:
     jnc .keyDown
         dec bx                  ; bx = 1: key up event
     .keyDown:
-    cmp al,0x1e                 ; a
-    jne .check1         
-        mov byte [cs:pressA], bl
-    .check1:
-    cmp al,0x20                 ; d
-    jne .check2
-        mov byte [cs:pressD], bl
-    .check2:
     cmp al,0x11                 ; w
-    jne .check3
-        mov byte [cs:pressW], bl
-    .check3:
+    jne .check_a
+        mov word [cs:last_pressed], 'w'
+    .check_a:
+    cmp al,0x1e                 ; a
+    jne .check_s         
+        mov word [cs:last_pressed], 'a'
+    .check_s:
     cmp al,0x1f                 ; s
-    jne .check4
-        mov byte [cs:pressS], bl
-    .check4:
+    jne .check_d
+        mov word [cs:last_pressed], 's'
+    .check_d:
+    cmp al,0x20                 ; d
+    jne .check_end
+        mov word [cs:last_pressed], 'd'
+    .check_end:
     mov al, 0x20 
     out 0x20, al                ; Acknowledge the intrpt
 	popa                        ; Restore state
@@ -112,15 +112,9 @@ SECTION .rodata
 ; Global Variables
 ;--------------------------------------------------------------------------
 SECTION .data
-    GLOBAL pressA
-    GLOBAL pressD
-    GLOBAL pressW
-    GLOBAL pressS
+    GLOBAL last_pressed
 
-    pressA: db 0
-    pressD: db 0
-    pressW: db 0
-    pressS: db 0
+    last_pressed: dw 0
 
 ;--------------------------------------------------------------------------
 ; Stack

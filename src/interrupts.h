@@ -3,10 +3,7 @@
 
 #include "types.h"
 
-extern uint8_t pressW;
-extern uint8_t pressA;
-extern uint8_t pressS;
-extern uint8_t pressD;
+extern uint8_t last_pressed;
 
 extern uint16_t register_interrupt_handlers();
 
