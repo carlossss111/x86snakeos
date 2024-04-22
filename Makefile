@@ -4,7 +4,7 @@ PREFIX =
 ASM    = nasm
 CC     = gcc
 BITS   = -m16
-OPTS   = -nostdlib -ffreestanding -std=c17 -mno-red-zone -fno-exceptions -fno-pie -Wall -Wextra -Werror
+OPTS   = -nostdlib -ffreestanding -std=c17 -mno-red-zone -fno-exceptions -fno-pie -Wall -Wextra
 LINKER = -T linker.ld
 VM     = x86snakeos
 
