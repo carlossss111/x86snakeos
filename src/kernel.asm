@@ -10,6 +10,7 @@ GLOBAL print_colour
 GLOBAL print
 GLOBAL draw_pixel
 GLOBAL register_interrupt_handlers
+GLOBAL waitms
 
 ; void graphics_mode
 ; Enables 320x200 VGA 256 colour mode, let's go RETRO!
@@ -84,6 +85,17 @@ keyboard_callback:
     out 0x20, al                ; Acknowledge the intrpt
 	popa                        ; Restore state
 	iret                        ; Return from an interrupt routine
+
+; void waitms(uint16_t millis)
+; Sleep for some milliseconds (it's kind of inaccurate but it works)
+waitms:
+    mov dx, [esp+4]
+    mov cx, [esp+4]
+    shr cx, 6                   ; Bitshifting to convert from mc to ms
+    shl dx, 10
+    mov ah, 0x86
+    int 0x15                    ; cx:dx sleep time in mc
+	ret
 
 ;--------------------------------------------------------------------------
 ; Global Constants

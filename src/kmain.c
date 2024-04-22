@@ -6,8 +6,7 @@ void kmain(){
     int16_t x = 0;
     int16_t y = 0;
     for(;;){
-        reset_game_tiles();
-
+        // Movement
         if(pressW){
             y--;
         }
@@ -21,10 +20,11 @@ void kmain(){
             x++;
         }
         
-        if(x > GAME_TILE_WIDTH){
+        // Bounds checking
+        if(x >= GAME_TILE_WIDTH){
             x = GAME_TILE_WIDTH-1;
         }
-        if(y > GAME_TILE_HEIGHT){
+        if(y >= GAME_TILE_HEIGHT){
             y = GAME_TILE_HEIGHT-1;
         }
         if(x < 0){
@@ -33,9 +33,12 @@ void kmain(){
         if(y < 0){
             y = 0;
         }
+    
+        // Graphics
+        reset_game_tiles();
         game_tiles[x][y] = L_CYAN;
-
         draw_game_tiles();
+        waitms(1000);
     }
 
     for(;;);
