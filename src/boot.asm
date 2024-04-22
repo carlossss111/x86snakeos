@@ -14,7 +14,7 @@ boot:
     ; Read the kernel if you can call it that
     mov [disk], dl              ; BIOS should put this disk in dl
     mov ah, 0x2                 ; Option: READ
-    mov al, 4                   ; Sectors to read
+    mov al, 10                  ; Sectors to read
     mov ch, 0                   ; Cylinder index
     mov dh, 0                   ; Head index
     mov cl, 2                   ; Sector index

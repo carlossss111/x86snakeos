@@ -3,42 +3,25 @@
 void kmain(){
     register_interrupt_handlers();
 
-    int16_t x = 0;
-    int16_t y = 0;
+    snake sn = init_snake();
+
     for(;;){
         // Movement
-        if(last_pressed == 'w'){
-            y--;
-        }
-        if(last_pressed == 'a'){
-            x--;
-        }
-        if(last_pressed == 's'){
-            y++;
-        }
-        if(last_pressed == 'd'){
-            x++;
-        }
-        
-        // Bounds checking
-        if(x >= GAME_TILE_WIDTH){
-            x = GAME_TILE_WIDTH-1;
-        }
-        if(y >= GAME_TILE_HEIGHT){
-            y = GAME_TILE_HEIGHT-1;
-        }
-        if(x < 0){
-            x = 0;
-        }
-        if(y < 0){
-            y = 0;
+        move(&sn, last_pressed);
+
+        // State check
+        if(game_over){
+            reset_game_tiles();
+            draw_game_tiles();
+            print("Game over man!");
+            break;
         }
     
         // Graphics
         reset_game_tiles();
-        game_tiles[x][y] = L_CYAN;
+        fill_snake_tiles(&sn);
         draw_game_tiles();
-        waitms(1000);
+        waitms(2000);
     }
 
     for(;;);

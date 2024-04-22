@@ -114,7 +114,7 @@ SECTION .rodata
 SECTION .data
     GLOBAL last_pressed
 
-    last_pressed: dw 0
+    last_pressed: dw 'd'
 
 ;--------------------------------------------------------------------------
 ; Stack
