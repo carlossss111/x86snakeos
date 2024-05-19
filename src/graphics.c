@@ -31,3 +31,16 @@ void draw_game_tiles(){ //TODO: Fix overwriting text
         }
     }
 }
+
+int16_t nthdigit(uint16_t x, uint16_t n){
+    while (n--) {
+        x /= 10;
+    }
+    return (x % 10);
+}
+
+void draw_num(uint16_t x, uint16_t y, int16_t number){
+    draw_digit(x,y, nthdigit(number, 2));
+    draw_digit(x+16,y, nthdigit(number, 1));
+    draw_digit(x+32,y, nthdigit(number, 0));
+}
