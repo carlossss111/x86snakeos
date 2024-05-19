@@ -12,6 +12,7 @@ GLOBAL draw_pixel
 GLOBAL register_interrupt_handlers
 GLOBAL waitms
 GLOBAL rand
+GLOBAL draw_digit
 
 ; void graphics_mode
 ; Enables 320x200 VGA 256 colour mode, let's go RETRO!
@@ -104,6 +105,55 @@ rand:
     rdrand ax
     ret
 
+; void draw_digit(uint16_t x, uint16_t y, uint16_y digit_to_print)
+; Prints a digit to the screen. Can be used in graphics-only mode!
+draw_digit:
+    mov eax, [esp+12]           ; arg3 - digit
+    imul eax, 2                 ; for some reason I can't lea *16
+    lea edx, [NUM_ZERO+(eax*8)] ; load address of nth digit bitmap
+
+    mov ax, [edx]               ; address
+    mov bx, 0                   ; bit counter (columns)
+    mov cx, 0                   ; addr counter (rows)
+    
+    .draw_num_loop:
+    rol ax, 1                   ; rotate bits left
+    test ax, 1                  ; test if last bit is 1
+    jz .dont_draw               ; only draw if bit is '1'
+
+        add bx, [esp+4]         ; arg1 - x position
+        add cx, [esp+8]         ; arg2 - y position
+
+        ; DRAW
+        push edx
+        pusha
+        push .ret_addr
+        mov [esp+4], bx
+        mov [esp+8], cx
+        mov [esp+12], byte 0x0F
+        jmp draw_pixel
+        .ret_addr:
+        popa
+        pop edx
+        ; END DRAW
+
+        sub bx, [esp+4]         ; reverse to previous values
+        sub cx, [esp+8]
+
+    .dont_draw:
+
+    inc bx                      ; increment bit counter
+    cmp bx, 16   
+    jl .draw_num_loop           ; loop while bit counter less than 16
+
+    mov bx, 0                   ; reset bit counter
+    inc ecx                     ; increment addr counter
+    lea di, [edx+ecx*2]         ; move to next row
+    mov ax, [di]                ; load address in next row
+    cmp cx, 8                   ; check if all rows done
+    jl .draw_num_loop           ; continue if not
+    ret
+
 ;--------------------------------------------------------------------------
 ; Global Constants
 ;--------------------------------------------------------------------------
@@ -114,6 +164,8 @@ SECTION .rodata
     PIXEL_WIDTH: dw 320             ; Width of screen in pixels
     PIXEL_HEIGHT: dw 200            ; Height of screen in pixels
     COLOUR_BUFFER: dw 0xA000        ; Address of the colour buffer
+
+    %include "src/numbers.asm"  
 
 ;--------------------------------------------------------------------------
 ; Global Variables

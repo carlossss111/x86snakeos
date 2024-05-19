@@ -29,6 +29,7 @@ extern const uint16_t PIXEL_WIDTH;
 extern const uint16_t PIXEL_HEIGHT;
 
 extern void draw_pixel(uint16_t x, uint16_t y, uint8_t colour);
+extern void draw_digit(uint16_t x, uint16_t y, uint16_t digit);
 
 uint8_t game_tiles[GAME_TILE_WIDTH][GAME_TILE_HEIGHT];
 
